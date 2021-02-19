@@ -1,41 +1,52 @@
 <template>
   <view>
-    <form @submit="formSubmit">
+    <form>
       <view align="center">
         <image class='esand_logo' src="../../static/logo.png"></image>
       </view>
       <view class="infos">
         <view class="title">姓名:</view>
-        <input class="uni-input" name="mCertName" placeholder="请输入姓名" value="" />
-
+        <input class="uni-input" name="mCertName" placeholder="请输入姓名"  v-model="mCertName"/>
         <view class="title">身份证号:</view>
-        <input class="uni-input" type="idcard" name="mCertNo" placeholder="请输入身份证号" value=""/>
+        <input class="uni-input" type="idcard" name="mCertNo" placeholder="请输入身份证号" v-model="mCertNo"/>
       </view>
-      
       <view align="center">
-        <button class="btSubmit" form-type="submit">实人认证</button>
+		<button class="btSubmit" @click="formSubmit()">实人认证</button>
       </view>
     </form>
+	<div align="center">
+		<textarea v-model="msg" />
+	</div>
+	<!-- <div align="center">
+		<textarea :value="msg" />
+	</div> -->
   </view>
 </template>
 
 <script>
   // TODO 替换成您的APPCODE
-  var APPCODE = "您的APPCODE";
+  var APPCODE = "2294b96c1dce4aedafa39bfa3fc5708c";
   var ZolozModule = uni.requireNativePlugin("Esand-ZolozModule");
+  import eButton from "../../components/eButton.vue";
   export default {
+	components:{
+		eButton
+	},
     data() {
       return {
-        
+        msg:"logs",
+		mCertName:"",
+		mCertNo:""
       }
     },
     methods: {
       formSubmit: function(e) {
-        console.log('form发生了submit事件，携带数据为：' +JSON.stringify(e.detail.value))
-        // 认证初始化, 详细的请求协议可参考：https://market.aliyun.com/products/57000002/cmapi00041091.html 
+		let _this=this;
+        console.log('form发生了submit事件，携带数据为：' +JSON.stringify(_this.mCertName,_this.mCertNo));
+        // 认证初始化, 详细的请求协议可参考：https://market.aliyun.com/products/57000002/cmapi00041091.html
         var zolozResult = ZolozModule.authInit({
-            'mCertNo': e.detail.value.mCertNo,
-            'mCertName': e.detail.value.mCertName
+            'mCertNo': _this.mCertNo,
+            'mCertName': _this.mCertName
           });
         console.log("zolozResult: ", zolozResult)
         if (zolozResult.code=='ZOLOZ_SUCCESS') {
@@ -46,13 +57,21 @@
             url: 'https://ediszim.market.alicloudapi.com/zoloz/zim/init',
             method: 'POST',
             data: {
+			  //业务id(2.0服务端生成，不作为业务关联使用)
               "bizId": initData.bizId,
+			  //客户业务标识（可用于交易关联，在getResult返回）
               "businessId": initData.bizId,
+			  //客户端采用的RSA加密传输的身份信息Base64编码字符串
               "identityParam": initData.identityParam,
+			  //metainfo 环境参数，需要通过客户端 SDK 获取
               "metaInfo": initData.metaInfo,
+			  //应用名称
               "appName": initData.appName,
+			  //APP签名
               "appSign": initData.appSign,
+			  //包名
               "packageName": initData.packageName,
+			  //平台：android,ios
               "platform": initData.platform
             },
             header: {
@@ -84,24 +103,18 @@
                         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                       },
                       success: (res) => {
-                        console.log('网络请求成功' + JSON.stringify(res.data))
-                        uni.showModal({
-                          title: "获取结果成功",
-                          content: JSON.stringify(res.data),
-                        })
+                        console.log('网络请求成功' + JSON.stringify(res.data));
+						_this.msg+="获取结果成功"+JSON.stringify(res.data);
                       }
                     })
                   } else {
-                    uni.showModal({
-                      title: "发生错误",
-                      content: JSON.stringify(ret),
-                    })
+					_this.msg+="发生错误"+JSON.stringify(ret);
                   }
                 })
             }
           })
         } else {
-          uni.showModal({title: "发生错误",content: JSON.stringify(zolozResult),})
+			_this.msg+="发生错误"+JSON.stringify(zolozResult);
         }
       },
     }
@@ -109,6 +122,7 @@
 </script>
 
 <style>
+	
 .esand_logo {
   margin-top: 100rpx;
   width: 200rpx;
