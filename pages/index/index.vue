@@ -25,7 +25,7 @@
 
 <script>
   // TODO 替换成您的APPCODE
-  var APPCODE = "2294b96c1dce4aedafa39bfa3fc5708c";
+  var APPCODE = "替换成您的APPCODE";
   var ZolozModule = uni.requireNativePlugin("Esand-ZolozModule");
   import eButton from "../../components/eButton.vue";
   export default {
