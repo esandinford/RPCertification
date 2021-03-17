@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<!-- uni-app官方的SDK -->
+	<script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.2.js"></script>
+    <title>Index</title>
+  </head>
+  <style>
+	  body{
+		  text-align: center;
+	  }
+	  .esand_logo{
+	  	margin-top: 20px;
+	  	width: 150px;
+	  	height: 150px;
+	  	align-self: center;
+	  }
+	  .btSubmit {
+	  	margin-top: 50px;
+		font-size: 1rem;
+	  	//margin: 100px 150px 0px 100px;
+	  }
+  </style>
+  <body>
+	  <image class="esand_logo" src="../../static/logo.png">
+	  <br>
+	  <button class="btSubmit" id="RPCVerify">RPCVerify</button>
+    <script>
+		// 获取按钮并且绑定事件
+		document.getElementById("RPCVerify").onclick=()=>{
+			// 使用postMessage向uni-app发送消息
+			uni.postMessage({  
+			        data: {  
+			            action: 'postMessage'  
+			        }  
+			 });
+		}
+    </script>
+  </body>
+</html>

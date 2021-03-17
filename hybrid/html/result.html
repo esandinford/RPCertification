@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	 <script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.2.js"></script>
+    <title>Result</title>
+  </head>
+  <style>
+	  .esand_logo{
+	  	margin-top: 20px;
+	  	width: 150px;
+	  	height: 150px;
+	  	align-self: center;
+	  }
+	  body{
+		  text-align: left;
+	  }
+	  .header{
+		  width: 100%;
+		  text-align: center;
+	  }
+  </style>
+  <body>
+	  <div class="header">
+		  <image class="esand_logo" src="../../static/logo.png">
+	  </div>
+	  <br>
+	  <p></p>
+	  <a href="./index.html">返回首页</a>
+	  <script>
+		  // 获取网页的path的内容
+		   let href = window.location.href;
+		   //获取参数部分
+		   let query =href.substring(href.indexOf('?')+1);
+		   //替换一些转义字符
+		   query=query.replace(/%20/g,' ').replace(/%22/g,'"').replace(/%23/g,'#').replace(/%25/g,'%').replace(/%26/g,'&').replace(/%28/g,'(')
+		   .replace(/%29/g,')').replace(/%2B/g,'+').replace(/%2C/g,',');
+		   
+		   /************讲url参数部分转换为JSON*/
+		   let parseObj="{";
+		   query=query.split("&");
+		   query.forEach(item=>{
+			   let t=item.split("=");
+			   if(t[1].startsWith("{")){
+				   parseObj+="\""+t[0]+"\""+":"+t[1]+",";
+			   }else{
+				   parseObj+="\""+t[0]+"\":\""+t[1]+"\",";
+			   }
+			   
+		   });
+		   parseObj=parseObj.substring(0,parseObj.length-1)+"}";
+		   /******************/
+		   document.querySelector("p").innerHTML=parseObj;
+	  </script>
+  </body>
+</html>
